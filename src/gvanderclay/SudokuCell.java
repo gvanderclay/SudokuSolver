@@ -11,12 +11,13 @@ public class SudokuCell {
 	private int box;
 	
 	/**Value that is inside of the cell*/
-	private int value;
+	private char value;
 	
 	public SudokuCell(int row, int column){
 		this.row = row;
 		this.column = column;
 		setBox();
+		value = ' ';
 	}
 
 	public boolean isRelated(SudokuCell compare){
@@ -51,11 +52,11 @@ public class SudokuCell {
 		this.column = column;
 	}
 	
-	public int getValue() {
+	public char getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(char value) {
 		this.value = value;
 	}
 
