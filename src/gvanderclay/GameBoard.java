@@ -16,6 +16,10 @@ public class GameBoard {
 		isSolved = false;
 	}
 	
+	public SudokuCell getCell(int row, int col){
+		return gameBoard[row][col];
+	}
+	
 	/**Fills the gameboard with empty SudokuCells*/
 	private void createBoard(){
 		for (int row = 0; row < BOARD_SIZE; row++){
@@ -26,7 +30,7 @@ public class GameBoard {
 	}
 	
 	/**Inserts a value into the gameBoard*/
-	public void insertValue(int row, int column, char value){
+	public void insertValue(int row, int column, int value){
 		if(!isValidInsert(gameBoard[row][column], value) || isSolved)
 			return;
 		else
@@ -35,7 +39,7 @@ public class GameBoard {
 	}
 	
 	/**Checks if the value can be inserted into the gameBoard*/
-	private boolean isValidInsert(SudokuCell SudokuCell, int value){
+	public boolean isValidInsert(SudokuCell SudokuCell, int value){
 		for(int row = 0; row < BOARD_SIZE; row++){
 			for(int column = 0; column < BOARD_SIZE; column++){
 				if(gameBoard[row][column].isRelated(SudokuCell) 
@@ -50,7 +54,7 @@ public class GameBoard {
 	private void checkIfSolved(){
 		for(int row = 0; row < BOARD_SIZE; row++){
 			for(int column = 0; column < BOARD_SIZE; column++){
-				if(gameBoard[row][column] == null){
+				if(gameBoard[row][column].getValue() == 0){
 					return;
 				}
 			}
@@ -59,7 +63,7 @@ public class GameBoard {
 	}
 	
 	/**Prints a string version of the gameBoard for testing purposes*/
-	private String printBoard(){
+	public String printBoard(){
 		String board = "";
 		for(int row = 0; row < BOARD_SIZE; row++){
 			board += "|";
@@ -74,9 +78,9 @@ public class GameBoard {
 	public static void main(String args[]){
 		GameBoard g = new GameBoard();
 		System.out.println(g.printBoard());
-		g.insertValue(0,0,'4');
+		g.insertValue(0,0,4);
 		System.out.println(g.printBoard());
-		g.insertValue(0,8,'5');
+		g.insertValue(0,8,5);
 		System.out.println(g.printBoard());
 	}
 }

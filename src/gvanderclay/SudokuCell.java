@@ -11,15 +11,19 @@ public class SudokuCell {
 	private int box;
 	
 	/**Value that is inside of the cell*/
-	private char value;
+	private int value;
 	
 	public SudokuCell(int row, int column){
 		this.row = row;
 		this.column = column;
 		setBox();
-		value = ' ';
+		value = 0;
 	}
 
+	public void unAssign(){
+		this.value = 0;
+	}
+	
 	public boolean isRelated(SudokuCell compare){
 		// this would mean they are the same cell
 		if(this.row == compare.getRow() 
@@ -52,11 +56,11 @@ public class SudokuCell {
 		this.column = column;
 	}
 	
-	public char getValue() {
+	public int getValue() {
 		return value;
 	}
 
-	public void setValue(char value) {
+	public void setValue(int value) {
 		this.value = value;
 	}
 
