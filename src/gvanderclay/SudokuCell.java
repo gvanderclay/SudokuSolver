@@ -63,6 +63,15 @@ public class SudokuCell {
 	public void setValue(int value) {
 		this.value = value;
 	}
+	
+	public void incValue(){
+		if(this.value < 9){
+			this.value++;
+		}
+		else{
+			this.value = 0;
+		}
+	}
 
 	public int getBox(){
 		return box;

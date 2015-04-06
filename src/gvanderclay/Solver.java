@@ -77,6 +77,7 @@ public class Solver {
 		game.insertValue(7, 8, 8);
 		game.insertValue(8, 3, 4);
 		game.insertValue(8, 6, 1);
+		System.out.println(game.printBoard());
 		Solver solver = new Solver(game);
 		solver.solve();
 		System.out.println(game.printBoard());
