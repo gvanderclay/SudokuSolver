@@ -2,9 +2,6 @@ package gvanderclay;
 
 public class GameBoard {
 	
-	/**If the game is solved or not*/
-	private boolean isSolved;
-	
 	/**Permanent size of the board*/
 	private final int BOARD_SIZE = 9;
 	
@@ -13,11 +10,18 @@ public class GameBoard {
 	
 	public GameBoard(){
 		createBoard();
-		isSolved = false;
 	}
 	
 	public SudokuCell getCell(int row, int col){
 		return gameBoard[row][col];
+	}
+	
+	public void clearBoard(){
+		for (int row = 0; row < BOARD_SIZE; row++){
+			for(int column = 0; column < BOARD_SIZE; column++){
+				gameBoard[row][column].setValue(0);
+			}
+		}
 	}
 	
 	/**Fills the gameboard with empty SudokuCells*/
@@ -31,11 +35,10 @@ public class GameBoard {
 	
 	/**Inserts a value into the gameBoard*/
 	public void insertValue(int row, int column, int value){
-		if(!isValidInsert(gameBoard[row][column], value) || isSolved)
+		if(!isValidInsert(gameBoard[row][column], value))
 			return;
 		else
 			gameBoard[row][column].setValue(value);
-		checkIfSolved();
 	}
 	
 	/**Checks if the value can be inserted into the gameBoard*/
@@ -50,16 +53,23 @@ public class GameBoard {
 		return true;
 	}
 	
-	/**Checks if the board is solved*/
-	private void checkIfSolved(){
+	public boolean isSolvable(){
 		for(int row = 0; row < BOARD_SIZE; row++){
 			for(int column = 0; column < BOARD_SIZE; column++){
-				if(gameBoard[row][column].getValue() == 0){
-					return;
+				for(int checkRow = 0; checkRow < BOARD_SIZE; checkRow++){
+					for(int checkCol = 0; checkCol < BOARD_SIZE; checkCol++){
+						if(gameBoard[row][column]
+						   .isRelated(gameBoard[checkRow][checkCol])
+						   && gameBoard[row][column].getValue() == 
+							  gameBoard[checkRow][checkCol].getValue()
+						   && gameBoard[row][column].getValue() != 0){
+							return false;
+						}
+					}
 				}
 			}
 		}
-		isSolved = true;
+		return true;
 	}
 	
 	/**Prints a string version of the gameBoard for testing purposes*/

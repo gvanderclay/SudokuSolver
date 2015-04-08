@@ -13,13 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import java.awt.GridLayout;
-
-import javax.swing.JToolBar;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-
-import com.jgoodies.forms.factories.DefaultComponentFactory;
-
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -31,8 +24,6 @@ public class SudokuGUI {
 	
 	private GameBoard game;
 	
-	private Solver solve;
-	
 	private final int SIZE = 9;
 	
 	private JButton[][] cells;
@@ -41,11 +32,21 @@ public class SudokuGUI {
 	
 	private JButton solveButton;
 	
+	private JButton resetButton;
+	
+	private JLabel gameStatus;
+	
 	private JPanel board;
 	
 	private JPanel[][] subBoards;
 	
+	private JPanel grid;
+	
+	private JPanel buttons;
+	
 	private ButtonListener listener;
+	
+	private String instructions;
 	
 	public SudokuGUI(){
 		initialize();
@@ -69,7 +70,33 @@ public class SudokuGUI {
 		});
 	}
 
-	protected JComponent getButtonPanel() {
+	private JComponent getButtonPanel(){
+		grid = new JPanel();
+		grid.setLayout(new GridLayout(2,1,0,0));
+		buttons = new JPanel();
+		instructions = "Left click to increment the cell \nRight "
+				+ "click to reset the cell";
+		buttons.setLayout(new GridLayout(1,2,0,0));
+		solveButton = new JButton("Solve");
+		solveButton.setFont(new Font("Ubuntu Medium", Font.PLAIN, 15));
+		solveButton.addMouseListener(listener);
+		resetButton = new JButton("Reset");
+		resetButton.setFont(new Font("Ubuntu Medium", Font.PLAIN, 15));
+		resetButton.addMouseListener(listener);
+		gameStatus = new JLabel(instructions);
+		gameStatus.setFont(new Font("Ubuntu Medium", Font.BOLD, 15));
+		gameStatus.setHorizontalAlignment(JLabel.CENTER);
+		gameStatus.setVerticalAlignment(JLabel.CENTER);
+		buttons.add(solveButton);
+		buttons.add(resetButton);
+		grid.add(gameStatus);
+		grid.add(buttons);
+		
+		
+		return grid;
+	}
+	
+	private JComponent getCellPanel() {
 		board = new JPanel();
 	    board.setBackground(new Color(0, 0, 0));
 	    board.setLayout(new GridLayout(3, 3, 5, 5));
@@ -118,16 +145,16 @@ public class SudokuGUI {
 		frame = new JFrame();
 		listener = new ButtonListener();
 		game = new GameBoard();
+		frame.setResizable(false);
 		frame.setBounds(100, 100, 600, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 10));
-		frame.getContentPane().add(getButtonPanel(), BorderLayout.CENTER);
+		frame.getContentPane().add(getCellPanel(), BorderLayout.CENTER);
 		title = new JLabel("Sudoku Solver");
 		title.setFont(new Font("Ubuntu Medium", Font.PLAIN, 22));
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(title, BorderLayout.NORTH);
-		solveButton = new JButton("Solve");
-		frame.getContentPane().add(solveButton, BorderLayout.SOUTH);
+		frame.getContentPane().add(getButtonPanel(), BorderLayout.SOUTH);
 	}
 	
 	class ButtonListener implements MouseListener {
@@ -142,13 +169,29 @@ public class SudokuGUI {
 					if(e.getSource() == cells[row][col]){
 						if(e.getButton() == 1){
 							game.getCell(row, col).incValue();
+							gameStatus.setText(instructions);
 						}
 						if(e.getButton() == 3){
 							game.getCell(row, col).setValue(0);
+							gameStatus.setText(instructions);
 						}
 					}
 				}
 			}
+			if(e.getSource() == solveButton){
+				Solver solve = new Solver(game);
+				if(!game.isSolvable()){
+					gameStatus.setText("Game is not solvable");
+				}
+				else{
+					solve.solve();
+				}
+			}
+			if(e.getSource() == resetButton){
+				game.clearBoard();
+				gameStatus.setText(instructions);
+			}
+			game.printBoard();
 			refreshBoard();
 		}
 		
