@@ -13,6 +13,11 @@ public class SudokuCell {
 	/**Value that is inside of the cell*/
 	private int value;
 	
+	/**
+	 * Basic constructor that assigns the cell to a row and column
+	 * @param row
+	 * @param column
+	 */
 	public SudokuCell(int row, int column){
 		this.row = row;
 		this.column = column;
@@ -20,10 +25,18 @@ public class SudokuCell {
 		value = 0;
 	}
 
+	/**
+	 * Sets the cell as 0 which means that it has no number assigned to it
+	 */
 	public void unAssign(){
 		this.value = 0;
 	}
 	
+	/**
+	 * Checks if a cell is related to another cell
+	 * @param compare Cell being compared
+	 * @return
+	 */
 	public boolean isRelated(SudokuCell compare){
 		// this would mean they are the same cell
 		if(this.row == compare.getRow() 
@@ -35,35 +48,63 @@ public class SudokuCell {
 			return true;
 		if(this.column == compare.getColumn())
 			return true;
+		// if the cells are in the same 3x3 box
 		if(this.box == compare.getBox())
 			return true;
 		return false;
 	}
 	
+	/**
+	 * Returns the row of the cell
+	 * @return
+	 */
 	public int getRow() {
 		return row;
 	}
 
+	/**
+	 * Sets the row of the cell
+	 * @param row
+	 */
 	public void setRow(int row) {
 		this.row = row;
 	}
 
+	/**
+	 * Gets the column of the cell
+	 * @return
+	 */
 	public int getColumn() {
 		return column;
 	}
 
+	/**
+	 * Sets the column of the cell
+	 * @param column
+	 */
 	public void setColumn(int column) {
 		this.column = column;
 	}
 	
+	/**
+	 * Get the value that is contained in the cell
+	 * @return
+	 */
 	public int getValue() {
 		return value;
 	}
 
+	/**
+	 * Sets the value in the cell
+	 * @param value
+	 */
 	public void setValue(int value) {
 		this.value = value;
 	}
 	
+	/**
+	 * Increments the value of the cell by 1
+	 */
 	public void incValue(){
 		if(this.value < 9){
 			this.value++;
@@ -73,10 +114,17 @@ public class SudokuCell {
 		}
 	}
 
+	/**
+	 * Gets which 3x3 box the cell is contained in
+	 * @return
+	 */
 	public int getBox(){
 		return box;
 	}
 	
+	/**
+	 * Sets the box that the cell is contained in
+	 */
 	private void setBox(){
 		if((this.row >= 0 && this.row <= 2) && 
 		   (this.column >= 0 && this.column <= 2)){

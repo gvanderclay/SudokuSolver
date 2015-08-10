@@ -2,54 +2,85 @@ package gvanderclay;
 
 public class Solver {
 
+	/**
+	 * Game that will be solved
+	 */
 	private GameBoard game;
-	
+
+	/**
+	 * Number that means a cell is unassigned
+	 */
 	private final int UNASSIGNED = 0;
-	
+
+	/**
+	 * Size of the columns and rows in the board
+	 */
 	private final int BOARD_SIZE = 9;
-	
-	public Solver(GameBoard game){
+
+	/**
+	 * Constructor of the solver that is connected to a game
+	 * 
+	 * @param game
+	 */
+	public Solver(GameBoard game) {
 		this.game = game;
 	}
-	
-	public boolean solve(){
+
+	/**
+	 * Solves the game
+	 * 
+	 * @return if the game is solvable or not
+	 */
+	public boolean solve() {
+		// finds the unassigend cells in the board
 		int[] unassignedCell = findUnassignedCell();
-		if(unassignedCell[0] == -1){
+		// if none of the cells are unassigned, then the board is solved
+		if (unassignedCell[0] == -1) {
 			return true;
 		}
+		// Sets the row and column as the first unassigned cell
 		int row = unassignedCell[0];
 		int col = unassignedCell[1];
-		
-		for(int num = 1; num <= BOARD_SIZE; num++){
-			if(game.isValidInsert(game.getCell(row, col), num)){
+
+		// loops through 1-9 to check if certain number inserts are valid
+		for (int num = 1; num <= BOARD_SIZE; num++) {
+			if (game.isValidInsert(game.getCell(row, col), num)) {
 				game.insertValue(row, col, num);
-				
-				if(solve()){
+
+				// recursive call to the function to assign new cells
+				if (solve()) {
 					return true;
 				}
-				
+
+				// if a certain insert doesn't work, it will unassign numbers
 				game.getCell(row, col).unAssign();
 			}
-			
-			
+
 		}
 		return false;
 	}
-	
-	private int[] findUnassignedCell(){
-		for (int row = 0; row < BOARD_SIZE; row++){
-	        for (int col = 0; col < BOARD_SIZE; col++){
-	            if (game.getCell(row, col).getValue() == UNASSIGNED){
-	            	int[] unassignedCell = {row,col};
-	            	return unassignedCell;
-	            }
-	        }
+
+	/**
+	 * Finds the first unassigned cell on the board
+	 * 
+	 * @return array of the coordinates of the unassigend cell in form
+	 *         {row,column}
+	 */
+	private int[] findUnassignedCell() {
+		for (int row = 0; row < BOARD_SIZE; row++) {
+			for (int col = 0; col < BOARD_SIZE; col++) {
+				if (game.getCell(row, col).getValue() == UNASSIGNED) {
+					int[] unassignedCell = { row, col };
+					return unassignedCell;
+				}
+			}
 		}
-		int[] unassignedCell = {-1,-1};
+		// if there are no unassigned cells, return {-1, -1}
+		int[] unassignedCell = { -1, -1 };
 		return unassignedCell;
 	}
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args) {
 		GameBoard game = new GameBoard();
 		game.insertValue(0, 2, 3);
 		game.insertValue(0, 5, 6);
